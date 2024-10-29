@@ -4,18 +4,20 @@
 A console tool to find your best match on Who's Hiring.  Exports to JSON for automated ennui. It:
 1. Finds the latest Who's Hiring post and fetches / caches all job comments locally in sqlite.
 2. Scores job postings according to your criteria.
-3. Provides a TUI to help you review the listings and track which ones are interesting / applied to / ruled out.
+3. Provides a TUI to help you review the jobs and track which ones are interesting / applied to / ruled out.
 
 ## Installation
 ```shell
-go install github.com/mwinters0/hnjobs
+go install github.com/mwinters0/hnjobs@latest
 ```
 
 Or grab a binary from the [releases](https://github.com/mwinters0/hnjobs/releases)
 
 ## Usage
 On first run, a config file is created at `UserConfigDir/hnjobs/config.json`.  (On linux this is
-`~/.config/hnjobs/config.json`.) 👉 **You should edit the config file**👈 before running any other commands, as this is
+`~/.config/hnjobs/config.json`.)
+
+👉 **You should edit the config file**👈 before running any other commands, as this is
 where your scoring rules are stored.  Some samples rules are provided in the generated file.  Each rule is a
 [golang regex](https://pkg.go.dev/regexp/syntax) which must be JSON escaped (`\b` -> `\\b`).
 
