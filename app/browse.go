@@ -706,7 +706,11 @@ func fixItemBg(index int) {
 	// tview doesn't do cascading styles, so when our list items have inline styles they override the
 	// "selected item" background color.  We then need to manually put the "selected" bg back into those items.
 	// We choose to leave the Priority jobs with "broken" backgrounds.
-	if !(displayJobs[index].Priority) {
+	if displayJobs[index].Priority {
+		// we changed the background to priority, just need to redraw it
+		companyList.SetItemText(index, displayJobs[index].DisplayCompany, "")
+	} else {
+		// replace selected item's bg
 		s := replaceInlineStyleBgs(
 			displayJobs[index].DisplayCompany,
 			curTheme.CompanyList.Colors.SelectedItemBackground.Bg,
