@@ -33,7 +33,7 @@ func main() {
 	}
 	if checkFirstRun(configPath, themePath+"/theme-default.json", dbPath) {
 		printPath := configPath
-		if strings.ContainsAny(printPath, " \t\n") {
+		if strings.ContainsAny(printPath, " \t\r\n") {
 			printPath = "\"" + printPath + "\""
 		}
 		fmt.Printf("\n"+
