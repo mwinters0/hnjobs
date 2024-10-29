@@ -821,6 +821,13 @@ func actionHelp() {
 	showModalTextView(25, 70, helpText, " Help ")
 }
 
+func weHaveData() bool {
+	if len(displayJobs) == 0 && displayStats.numHidden == 0 {
+		return false
+	}
+	return true
+}
+
 func actionListMarkPriority() {
 	if len(displayJobs) == 0 {
 		return
@@ -868,20 +875,26 @@ func actionListMarkApplied() {
 }
 
 func actionToggleShowBelowThreshold() {
-	if len(displayJobs) == 0 {
+	if !weHaveData() {
 		return
 	}
 	displayOptions.showBelowThreshold = !displayOptions.showBelowThreshold
-	curSelectedJobId := displayJobs[companyList.GetCurrentItem()].Id
+	var curSelectedJobId int
+	if companyList.GetItemCount() > 0 {
+		curSelectedJobId = displayJobs[companyList.GetCurrentItem()].Id
+	}
 	loadList(curSelectedJobId)
 }
 
 func actionToggleShowUninterested() {
-	if len(displayJobs) == 0 {
+	if !weHaveData() {
 		return
 	}
 	displayOptions.showUninterested = !displayOptions.showUninterested
-	curSelectedJobId := displayJobs[companyList.GetCurrentItem()].Id
+	var curSelectedJobId int
+	if companyList.GetItemCount() > 0 {
+		curSelectedJobId = displayJobs[companyList.GetCurrentItem()].Id
+	}
 	loadList(curSelectedJobId)
 }
 
@@ -1205,7 +1218,7 @@ func actionBrowseStories() {
 }
 
 func actionRescore() {
-	if len(displayJobs) == 0 {
+	if !weHaveData() {
 		return
 	}
 	var err error
@@ -1237,8 +1250,6 @@ func actionRescore() {
 		modalTV.SetText(fmt.Sprintf("\n Rescoring \"%s\" ...\n", displayOptions.curStory.DisplayTitle))
 
 		pages.AddPage(pageName, makeModal(modalTV, cols, rows+2), true, true)
-		pages.SetBackgroundColor(bgColor)
-
 		tvApp.SetFocus(modalTV)
 
 		err = config.Reload()
@@ -1250,7 +1261,10 @@ func actionRescore() {
 		_, err = modalTV.Write([]byte(fmt.Sprintf(" Rescored %d jobs.  Press ESC to continue.", num)))
 		maybePanic(err)
 		story := displayOptions.curStory
-		curSelectedJobId := displayJobs[companyList.GetCurrentItem()].Id
+		var curSelectedJobId int
+		if companyList.GetItemCount() > 0 {
+			curSelectedJobId = displayJobs[companyList.GetCurrentItem()].Id
+		}
 		reset()
 		displayOptions.curStory = story
 		loadList(curSelectedJobId)
@@ -1324,7 +1338,7 @@ func rebuildHeaderText() {
 }
 
 func getStatsText(availableWidth int) string {
-	if len(displayJobs) == 0 {
+	if !weHaveData() {
 		return ""
 	}
 	condensedThreshold := 110 // TODO take two passes so we don't have to rely on a guesstimate
