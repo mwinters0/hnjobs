@@ -56,7 +56,7 @@ func getDefaultTheme() Theme {
 			Email:           &sanitview.TViewStyle{Fg: "pink"},
 			PositiveHit:     &sanitview.TViewStyle{Fg: "#a1f6ae"},
 			NegativeHit:     &sanitview.TViewStyle{Fg: "red"},
-			Pre:             &sanitview.TViewStyle{Fg: "#888888"},
+			Pre:             &sanitview.TViewStyle{Fg: "#bbbbbb"},
 			FrameBackground: &sanitview.TViewStyle{Bg: black},
 			FrameHeader:     &sanitview.TViewStyle{Fg: white, Bg: hnOrange},
 		},
