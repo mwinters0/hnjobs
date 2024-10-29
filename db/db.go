@@ -10,7 +10,7 @@ import (
 
 	//_ "github.com/ncruces/go-sqlite3/driver" //sqlite3
 	//_ "github.com/ncruces/go-sqlite3/embed"
-	"hnjobs/hn"
+	"github.com/mwinters0/hnjobs/hn"
 	_ "modernc.org/sqlite" //sqlite
 	"strconv"
 	"sync"

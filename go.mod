@@ -1,4 +1,4 @@
-module hnjobs
+module github.com/mwinters0/hnjobs
 
 go 1.23.1
 

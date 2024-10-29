@@ -1,3 +1,5 @@
+[![Go Report](https://goreportcard.com/badge/github.com/mwinters0/hnjobs)](https://goreportcard.com/report/github.com/mwinters0/hnjobs)
+
 # hnjobs
 A console tool to find your best match on Who's Hiring.  Exports to JSON for automated ennui. It:
 1. Finds the latest Who's Hiring post and fetches / caches all job comments locally in sqlite.

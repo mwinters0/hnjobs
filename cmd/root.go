@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"github.com/mwinters0/hnjobs/app"
 	"github.com/spf13/cobra"
-	"hnjobs/app"
 	"os"
 )
 

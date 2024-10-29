@@ -3,9 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/mwinters0/hnjobs/app"
+	"github.com/mwinters0/hnjobs/db"
 	"github.com/spf13/cobra"
-	"hnjobs/app"
-	"hnjobs/db"
 	"log"
 )
 

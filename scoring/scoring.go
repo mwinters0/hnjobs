@@ -2,8 +2,8 @@ package scoring
 
 import (
 	"fmt"
-	"hnjobs/config"
-	"hnjobs/db"
+	"github.com/mwinters0/hnjobs/config"
+	"github.com/mwinters0/hnjobs/db"
 	"regexp"
 	"slices"
 )

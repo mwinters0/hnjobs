@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/mwinters0/hnjobs/db"
+	"github.com/mwinters0/hnjobs/hn"
 	"github.com/spf13/cobra"
-	"hnjobs/db"
-	"hnjobs/hn"
 )
 
 var dumpCmd = &cobra.Command{

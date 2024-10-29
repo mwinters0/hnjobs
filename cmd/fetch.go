@@ -3,9 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"github.com/mwinters0/hnjobs/app"
+	"github.com/mwinters0/hnjobs/config"
 	"github.com/spf13/cobra"
-	"hnjobs/app"
-	"hnjobs/config"
 	"log"
 	"os"
 )

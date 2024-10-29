@@ -1,6 +1,6 @@
 package theme
 
-import "hnjobs/sanitview"
+import "github.com/mwinters0/hnjobs/sanitview"
 
 func getMaterialTheme() Theme {
 	// converted from https://github.com/MartinSeeler/iterm2-material-design/blob/master/material-design-colors.itermcolors

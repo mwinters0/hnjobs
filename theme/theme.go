@@ -3,7 +3,7 @@ package theme
 import (
 	"encoding/json"
 	"fmt"
-	"hnjobs/sanitview"
+	"github.com/mwinters0/hnjobs/sanitview"
 	"os"
 	"path/filepath"
 	"strings"

@@ -1,6 +1,6 @@
 package theme
 
-import "hnjobs/sanitview"
+import "github.com/mwinters0/hnjobs/sanitview"
 
 type GruvboxIntensity = int
 

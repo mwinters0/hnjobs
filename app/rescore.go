@@ -2,8 +2,8 @@ package app
 
 import (
 	"errors"
-	"hnjobs/db"
-	"hnjobs/scoring"
+	"github.com/mwinters0/hnjobs/db"
+	"github.com/mwinters0/hnjobs/scoring"
 )
 
 func ReScore(storyID int) (int, error) {
