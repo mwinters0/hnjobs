@@ -43,6 +43,7 @@ var tcellScreen tcell.Screen
 var companyList *tview.List
 var headerText *tview.TextView
 var jobText *tview.TextView
+var jobFrame *tview.Frame
 var pages *tview.Pages
 var showingModal bool
 var pageScrollAmount int = 10
@@ -295,11 +296,13 @@ func newDisplayJob(job *db.Job) *DisplayJob {
 	// apply regions
 	offset := 0
 	for e := range rlm.MergedEvents() {
-		fg := e.Values[keyFg]
-		bg := e.Values[keyBg]
-		attr := e.Values[keyAttr]
-		url := e.Values[keyURL]
-		tag := fmt.Sprintf("[%s:%s:%s:%s]", fg, bg, attr, url)
+		tag := fmt.Sprintf(
+			"[%s:%s:%s:%s]",
+			e.Values[keyFg],
+			e.Values[keyBg],
+			e.Values[keyAttr],
+			e.Values[keyURL],
+		)
 		tagLen := len(tag)
 		totalOffset := e.Offset + offset
 		str = str[:totalOffset] + tag + str[totalOffset:]
@@ -618,23 +621,7 @@ func Browse() {
 	})
 	jobFrameInner := tview.NewFrame(jobText) // frame attrs
 	jobFrameInner.SetBackgroundColor(tcell.GetColor(curTheme.JobBody.FrameBackground.Bg))
-	jFrameTransitionStyle := &sanitview.TViewStyle{
-		Fg: curTheme.JobBody.FrameHeader.Bg,
-		Bg: curTheme.JobBody.FrameBackground.Bg,
-	}
-	jobFrame := tview.NewFrame(jobFrameInner).
-		AddText(
-			fmt.Sprintf(
-				"%s%s%s%s%s%s",
-				jFrameTransitionStyle.AsTag(),
-				"◢",
-				curTheme.JobBody.FrameHeader.AsTag(),
-				" Job ",
-				jFrameTransitionStyle.AsTag(),
-				"◤",
-			),
-			true, tview.AlignCenter, 0,
-		).
+	jobFrame = tview.NewFrame(jobFrameInner).
 		SetBorders(0, 0, 0, 0, 0, 0)
 	jobFrame. // Box attrs
 			SetBackgroundColor(tcell.GetColor(curTheme.JobBody.FrameBackground.Bg)).
@@ -725,6 +712,54 @@ func listNavHandler(index int, mainText string, secondaryText string, shortcut r
 		return
 	}
 	jobText.SetText(displayJobs[index].DisplayText)
+
+	//update "ago"
+	jobFrame.Clear()
+	jFrameHeaderTransitionStyle := &sanitview.TViewStyle{
+		Fg: curTheme.JobBody.FrameHeader.Bg,
+		Bg: curTheme.JobBody.FrameBackground.Bg,
+	}
+	jobFrame.AddText(
+		fmt.Sprintf(
+			"%s%s%s%s%s%s",
+			jFrameHeaderTransitionStyle.AsTag(),
+			"◢",
+			curTheme.JobBody.FrameHeader.AsTag(),
+			" Job ",
+			jFrameHeaderTransitionStyle.AsTag(),
+			"◤",
+		),
+		true, tview.AlignCenter, 0,
+	)
+
+	ago := time.Since(displayJobs[index].GoTime)
+	var agoText string
+	switch {
+	case ago < time.Minute:
+		agoText = " now! "
+	case ago < time.Hour:
+		agoText = fmt.Sprintf(" %dm ago ", int(ago.Minutes()))
+	case ago < 24*time.Hour:
+		agoText = fmt.Sprintf(" %dh ago ", int(ago.Hours()))
+	default:
+		agoText = fmt.Sprintf(" %dd ago ", int(ago.Hours()/24))
+	}
+	frameAgeTransitionStyle := &sanitview.TViewStyle{
+		Bg: curTheme.JobBody.Normal.Bg,
+		Fg: curTheme.UI.HeaderStatsHidden.Bg,
+	}
+	jobFrame.AddText(
+		fmt.Sprintf(
+			"%s%s%s%s%s%s",
+			frameAgeTransitionStyle.AsTag(),
+			"◢",
+			curTheme.UI.HeaderStatsHidden.AsTag(),
+			agoText,
+			frameAgeTransitionStyle.AsTag(),
+			"◤",
+		),
+		true, tview.AlignRight, 0,
+	)
 
 	fixItemBg(index)
 	if prevSelectedJob != -1 {
