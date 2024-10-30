@@ -712,6 +712,7 @@ func listNavHandler(index int, mainText string, secondaryText string, shortcut r
 		return
 	}
 	jobText.SetText(displayJobs[index].DisplayText)
+	jobText.ScrollToBeginning()
 
 	//update "ago"
 	jobFrame.Clear()
