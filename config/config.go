@@ -38,6 +38,7 @@ type ScoringRule struct {
 	Score       int      `json:"score"`
 	TagsWhy     []string `json:"tags_why,omitempty"`
 	TagsWhyNot  []string `json:"tags_why_not,omitempty"`
+	Colorize    *bool    `json:"colorize,omitempty"` // pointer for default nil instead of false
 }
 
 func GetConfig() ConfigObj {

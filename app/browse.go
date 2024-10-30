@@ -276,6 +276,9 @@ func newDisplayJob(job *db.Job) *DisplayJob {
 
 	// rules
 	for _, r := range scoring.GetRules() {
+		if r.Colorize != nil && !*r.Colorize {
+			continue
+		}
 		switch r.RuleType {
 		case scoring.TextFound:
 			matchIndices := r.Regex.FindAllStringIndex(str, -1)

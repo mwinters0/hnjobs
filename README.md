@@ -59,8 +59,9 @@ hnjobs dump # Dump the current month's data to JSON on stdout.
 
 ## Scoring rules FAQ
 - `text_missing` rules match if the regex fails.  Use this to influence the score if a word is missing from a listing.
-- `why` and `why_not` tags are optional.  I like to analyze my past decisions whenever I watch my credit score drop. 🤷  These will 
-become visible in the TUI eventually.
+- `why` and `why_not` tags are optional.  I like to analyze my past decisions whenever I watch my credit score drop. 
+🤷  These will become visible in the TUI eventually.
+- `colorize` is an optional boolean.  Set to false if you don't want this rule to be colorized in the display.
 
 ## Styling
 If you hate orange, you can edit your config file to use one of the built-in themes: `material` or
