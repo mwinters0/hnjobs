@@ -42,11 +42,11 @@ your criteria, and show the TUI.
   - `x` - mark job uninterested (hidden) or interested (default)
   - `p` - mark priority / not priority
   - `a` - mark applied to / not applied to
+  - `s` - reload config file and re-score the jobs (useful if you've changed your rules)
 - Display
   - `X` - toggle hiding of jobs marked uninterested
   - `T` - toggle hiding of jobs below your score threshold (set in the config file)
   - `m` - select month (if multiple in your DB) / delete old months
-  - `s` - reload config file and re-score the jobs (useful if you changed your rules)
 
 ### Commands
 ```shell
