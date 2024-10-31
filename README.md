@@ -52,8 +52,8 @@ your criteria, and show the TUI.
 ```shell
 hnjobs # Works offline.
 hnjobs fetch # Just fetch, no TUI. Run this before hopping on a plane.
-hnjobs fetch -x # Fetch and set exit code according to results. 0 = new jobs available. #bashlife
-hnjobs rescore # Re-score the cached jobs by your criteria. Only needed if you've changed your rules.
+hnjobs fetch -x # Fetch and set exit code according to results. 0 = new jobs available.
+hnjobs rescore # Re-score the cached jobs. Only needed if you've changed your rules.
 hnjobs dump # Dump the current month's data to JSON on stdout.
 ```
 
@@ -61,7 +61,7 @@ hnjobs dump # Dump the current month's data to JSON on stdout.
 - `text_missing` rules match if the regex fails.  Use this to influence the score if a word is missing from a listing.
 - `why` and `why_not` tags are optional.  I like to analyze my past decisions whenever I watch my credit score drop. 
 🤷  These will become visible in the TUI eventually.
-- `colorize` is an optional boolean.  Set to false if you don't want this rule to be colorized in the display.
+- `colorize` is an optional boolean that defaults to `true`.  Set to `false` if you don't want this rule to be colorized in the display.
 
 ## Styling
 If you hate orange, you can edit your config file to use one of the built-in themes: `material` or
