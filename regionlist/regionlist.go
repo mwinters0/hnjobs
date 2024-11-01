@@ -232,7 +232,7 @@ func (rl *RegionList) InsertRegion(newRegion *Region) error {
 func (rl *RegionList) String() string {
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("RegionList{\n  len: %d\n", rl.len))
-	for i, _ := range rl.regions {
+	for i := range rl.regions {
 		b.WriteString(fmt.Sprintf("  %#v,\n", *rl.regions[i]))
 	}
 	b.WriteString("}")
@@ -247,7 +247,7 @@ func (rl *RegionList) Equals(other *RegionList) bool {
 	if len(rl.regions) != len(other.regions) {
 		return false
 	}
-	for i, _ := range rl.regions {
+	for i := range rl.regions {
 		if !(*rl.regions[i] == *other.regions[i]) {
 			return false
 		}
