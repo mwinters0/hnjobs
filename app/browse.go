@@ -1338,7 +1338,6 @@ func loadList(prevDisplayJobID int) {
 	displayJobs = []*DisplayJob{}
 	displayStats.numBelowThreshold = 0
 	displayStats.numUninterested = 0
-	//displayStats.numUninterestedDisplayed = 0
 	displayStats.numHidden = 0
 	// rebuild list and try to find previously-selected item by id
 	newDJIndex := -1
