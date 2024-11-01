@@ -50,12 +50,13 @@ var pageScrollAmount int = 10
 var prevSelectedJob = -1 //for listNavHandler()
 
 var displayStats = struct {
-	numTotal          int //redundant but separates concerns
-	numBelowThreshold int
-	numUninterested   int
-	numHidden         int
+	numTotal                 int //redundant but separates concerns
+	numBelowThreshold        int
+	numUninterested          int
+	numUninterestedDisplayed int // for deciding whether 'x' performs "show uninterested" or "hide"
+	numHidden                int
 }{
-	0, 0, 0, 0,
+	0, 0, 0, 0, 0,
 }
 
 type DisplayStory struct {
@@ -98,12 +99,13 @@ func reset() {
 		urlFootnotes:       false,
 	}
 	displayStats = struct {
-		numTotal          int
-		numBelowThreshold int
-		numUninterested   int
-		numHidden         int
+		numTotal                 int
+		numBelowThreshold        int
+		numUninterested          int
+		numUninterestedDisplayed int
+		numHidden                int
 	}{
-		0, 0, 0, 0,
+		0, 0, 0, 0, 0,
 	}
 	displayJobs = []*DisplayJob{}
 	showingModal = false
@@ -899,9 +901,11 @@ func actionListMarkInterested() {
 	if displayJobs[i].Interested {
 		displayJobs[i].Interested = false
 		displayStats.numUninterested++
+		displayStats.numUninterestedDisplayed++
 	} else {
 		displayJobs[i].Interested = true
 		displayStats.numUninterested--
+		displayStats.numUninterestedDisplayed--
 	}
 	err := listItemModified(i)
 	maybePanic(err)
@@ -933,11 +937,16 @@ func actionToggleShowUninterested() {
 	if !weHaveData() {
 		return
 	}
-	displayOptions.showUninterested = !displayOptions.showUninterested
 	var curSelectedJobId int
 	if companyList.GetItemCount() > 0 {
 		curSelectedJobId = displayJobs[companyList.GetCurrentItem()].Id
 	}
+	if displayStats.numUninterestedDisplayed > 0 {
+		// we have some items marked uninterested but still displayed.  Hide them.
+		loadList(curSelectedJobId)
+		return
+	}
+	displayOptions.showUninterested = !displayOptions.showUninterested
 	loadList(curSelectedJobId)
 }
 
@@ -1329,6 +1338,7 @@ func loadList(prevDisplayJobID int) {
 	displayJobs = []*DisplayJob{}
 	displayStats.numBelowThreshold = 0
 	displayStats.numUninterested = 0
+	displayStats.numUninterestedDisplayed = 0
 	displayStats.numHidden = 0
 	// rebuild list and try to find previously-selected item by id
 	newDJIndex := -1
