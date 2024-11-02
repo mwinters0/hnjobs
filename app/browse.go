@@ -784,6 +784,7 @@ func listItemModified(i int) error {
 	fixItemBg(i)
 	companyList.SetCurrentItem(i) //triggers redraw
 	rebuildHeaderText()
+	tvApp.SetFocus(companyList)
 	return nil
 }
 
