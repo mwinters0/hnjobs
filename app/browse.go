@@ -126,6 +126,7 @@ func maybePanic(err error) {
 }
 
 var preRegex *regexp.Regexp
+var italicRegex *regexp.Regexp
 var linkRegex *regexp.Regexp
 var emailRegex *regexp.Regexp
 
@@ -262,6 +263,12 @@ func newDisplayJob(job *db.Job) *DisplayJob {
 		preRegex = regexp.MustCompile(`(?s)<pre>(?P<content>.+?)</pre>`)
 	}
 	str = processSubmatchRegex(preRegex, str, rlm, curTheme.JobBody.Pre)
+
+	//italic
+	if italicRegex == nil {
+		italicRegex = regexp.MustCompile(`(?s)<i>(?P<content>.+?)</i>`)
+	}
+	str = processSubmatchRegex(italicRegex, str, rlm, &sanitview.TViewStyle{Attrs: "i"})
 
 	// url
 	if linkRegex == nil {
