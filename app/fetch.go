@@ -22,8 +22,8 @@ var numCommentsFetched atomic.Int32
 type UpdateType = int
 
 const (
-	UpdateTypeGeneric UpdateType = iota
-	UpdateTypeNewStory // value is new story id
+	UpdateTypeGeneric  UpdateType = iota
+	UpdateTypeNewStory            // value is new story id
 	UpdateTypeNonFatalErr
 	UpdateTypeFatal
 	UpdateTypeBadComment
@@ -264,7 +264,7 @@ func FetchAsync(fo FetchOptions) {
 					numUpdatedJobsFetched.Load(),
 					numCommentsFetched.Load(),
 				),
-				int(numNewJobsFetched.Load() + numUpdatedJobsFetched.Load()),
+				int(numNewJobsFetched.Load()+numUpdatedJobsFetched.Load()),
 				nil,
 				false,
 			)

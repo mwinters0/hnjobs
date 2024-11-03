@@ -1057,6 +1057,7 @@ func fetchJobs(force bool) {
 			if displayOptions.curStory.Id == 0 {
 				// if we didn't have a story loaded before, look for one
 				setupLatestStory()
+				loadList(0)
 			} else {
 				// reload the current story
 				curStory := displayOptions.curStory
@@ -1065,22 +1066,22 @@ func fetchJobs(force bool) {
 				}
 				reset()
 				displayOptions.curStory = curStory
-			}
-			loadList(curJobId)
-			if gotNewStory {
-				// suggest switching to it
-				latest, err := db.GetLatestStory()
-				maybePanic(err)
-				dLatest := newDisplayStory(latest)
-				s := fmt.Sprintf(
-					"Found a new story!\n\n%s%s%s\n\nSwitch to it?",
-					curTheme.UI.ModalHighlight.AsTag(),
-					dLatest.DisplayTitle,
-					curTheme.UI.ModalNormal.AsTag(),
-				)
-				suggestSwitchModal.SetText(s)
-				pages.AddPage(suggestSwitchPageName, suggestSwitchModal, true, true)
-				tvApp.SetFocus(suggestSwitchModal)
+				loadList(curJobId)
+				if gotNewStory {
+					// suggest switching to it
+					latest, err := db.GetLatestStory()
+					maybePanic(err)
+					dLatest := newDisplayStory(latest)
+					s := fmt.Sprintf(
+						"Found a new story!\n\n%s%s%s\n\nSwitch to it?",
+						curTheme.UI.ModalHighlight.AsTag(),
+						dLatest.DisplayTitle,
+						curTheme.UI.ModalNormal.AsTag(),
+					)
+					suggestSwitchModal.SetText(s)
+					pages.AddPage(suggestSwitchPageName, suggestSwitchModal, true, true)
+					tvApp.SetFocus(suggestSwitchModal)
+				}
 			}
 			return nil
 		}
