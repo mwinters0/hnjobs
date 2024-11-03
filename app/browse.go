@@ -969,6 +969,39 @@ func actionConsiderFetch(force bool) {
 
 func fetchJobs(force bool) {
 	showingModal = true
+	bgColor := tcell.GetColor(curTheme.UI.ModalNormal.Bg)
+
+	// If we find a new story, we want to prompt the user to switch to it
+	var gotNewStory bool
+	const suggestSwitchPageName = "suggestSwitch"
+	suggestSwitchModal := tview.NewModal().
+		AddButtons([]string{"Yes", "No"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			switch buttonLabel {
+			case "Yes":
+				pages.RemovePage(suggestSwitchPageName)
+				reset()
+				setupLatestStory()
+				loadList(0)
+			case "No":
+				pages.RemovePage(suggestSwitchPageName)
+				tvApp.SetFocus(companyList)
+			}
+		}).
+		SetBackgroundColor(bgColor)
+	suggestSwitchModal. //box attrs
+				SetBorderColor(tcell.GetColor(curTheme.UI.FocusBorder.Fg)).
+				SetBorderStyle(curTheme.UI.FocusBorder.AsTCellStyle())
+	suggestSwitchModal.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyEscape:
+			pages.RemovePage(suggestSwitchPageName)
+			return nil
+		}
+		return event
+	})
+
+	const fetchModalPageName = "fetchModal"
 	ctx, cancelFetch := context.WithCancel(context.Background())
 	done := false
 	pDone := &done
@@ -986,7 +1019,6 @@ func fetchJobs(force bool) {
 	} else {
 		cols = 70
 	}
-	bgColor := tcell.GetColor(curTheme.UI.ModalNormal.Bg)
 	fetchText := tview.NewTextView().
 		SetSize(rows, cols).
 		SetDynamicColors(true).
@@ -1020,18 +1052,35 @@ func fetchJobs(force bool) {
 				return nil
 			}
 			pages.ShowPage("base")
-			pages.RemovePage("fetchModal")
+			pages.RemovePage(fetchModalPageName)
+			var curJobId int
 			if displayOptions.curStory.Id == 0 {
+				// if we didn't have a story loaded before, look for one
 				setupLatestStory()
-			}
-			curStory := displayOptions.curStory
-			reset()
-			displayOptions.curStory = curStory
-			if len(displayJobs) > 0 {
-				curSelectedJobId := displayJobs[companyList.GetCurrentItem()].Id
-				loadList(curSelectedJobId)
 			} else {
-				loadList(0)
+				// reload the current story
+				curStory := displayOptions.curStory
+				if len(displayJobs) > 0 {
+					curJobId = displayJobs[companyList.GetCurrentItem()].Id
+				}
+				reset()
+				displayOptions.curStory = curStory
+			}
+			loadList(curJobId)
+			if gotNewStory {
+				// suggest switching to it
+				latest, err := db.GetLatestStory()
+				maybePanic(err)
+				dLatest := newDisplayStory(latest)
+				s := fmt.Sprintf(
+					"Found a new story!\n\n%s%s%s\n\nSwitch to it?",
+					curTheme.UI.ModalHighlight.AsTag(),
+					dLatest.DisplayTitle,
+					curTheme.UI.ModalNormal.AsTag(),
+				)
+				suggestSwitchModal.SetText(s)
+				pages.AddPage(suggestSwitchPageName, suggestSwitchModal, true, true)
+				tvApp.SetFocus(suggestSwitchModal)
 			}
 			return nil
 		}
@@ -1044,7 +1093,7 @@ func fetchJobs(force bool) {
 		}
 	}
 
-	pages.AddPage("fetchModal", makeModal(fetchText, cols, rows+2), true, true)
+	pages.AddPage(fetchModalPageName, makeModal(fetchText, cols, rows+2), true, true)
 	pages.HidePage("base")
 	tvApp.SetFocus(fetchText)
 
@@ -1060,6 +1109,7 @@ func fetchJobs(force bool) {
 				lineStyle = curTheme.JobBody.PositiveHit
 			}
 		case UpdateTypeNewStory:
+			gotNewStory = true
 			lineStyle = curTheme.JobBody.PositiveHit
 		case UpdateTypeDone:
 			addLine(" --------------------\n")
@@ -1120,7 +1170,7 @@ func actionBrowseStories() {
 		const browseStoriesPageName = "browseStories"
 
 		const deleteConfirmPageName = "storyDeleteConfirm"
-		var deleteStory func() // defined after storyList
+		var deleteStory func() // defined later, after storyList
 		deleteConfirmModal := tview.NewModal().
 			AddButtons([]string{"Delete", "Cancel"}).
 			SetDoneFunc(func(buttonIndex int, buttonLabel string) {

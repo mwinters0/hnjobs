@@ -23,12 +23,12 @@ type UpdateType = int
 
 const (
 	UpdateTypeGeneric UpdateType = iota
-	UpdateTypeNewStory
+	UpdateTypeNewStory // value is new story id
 	UpdateTypeNonFatalErr
 	UpdateTypeFatal
 	UpdateTypeBadComment
 	UpdateTypeJobFetched
-	UpdateTypeDone
+	UpdateTypeDone // value is newJobs + updatedJobs
 )
 
 type FetchStatusUpdate struct {
@@ -130,7 +130,7 @@ func FetchAsync(fo FetchOptions) {
 		fo.Status <- FetchStatusUpdate{
 			UpdateTypeNewStory,
 			fmt.Sprintf("Found NEW job story: \"%s\" (%d top-level comments)", apiStory.Title, len(apiStory.Kids)),
-			len(apiStory.Kids),
+			apiStory.Id,
 			nil,
 		}
 		// We don't want to set fetched_time in the DB until after we've completed the fetch
@@ -264,7 +264,7 @@ func FetchAsync(fo FetchOptions) {
 					numUpdatedJobsFetched.Load(),
 					numCommentsFetched.Load(),
 				),
-				int(numNewJobsFetched.Load()),
+				int(numNewJobsFetched.Load() + numUpdatedJobsFetched.Load()),
 				nil,
 				false,
 			)
