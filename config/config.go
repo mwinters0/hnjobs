@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/adrg/xdg"
+	"github.com/mwinters0/hnjobs/sanitview"
 	"os"
 	"strings"
 )
@@ -33,12 +34,13 @@ type DisplayConfig struct {
 }
 
 type ScoringRule struct {
-	TextFound   string   `json:"text_found,omitempty"`
-	TextMissing string   `json:"text_missing,omitempty"`
-	Score       int      `json:"score"`
-	TagsWhy     []string `json:"tags_why,omitempty"`
-	TagsWhyNot  []string `json:"tags_why_not,omitempty"`
-	Colorize    *bool    `json:"colorize,omitempty"` // pointer for default nil instead of false
+	TextFound   string                `json:"text_found,omitempty"`
+	TextMissing string                `json:"text_missing,omitempty"`
+	Score       int                   `json:"score"`
+	TagsWhy     []string              `json:"tags_why,omitempty"`
+	TagsWhyNot  []string              `json:"tags_why_not,omitempty"`
+	Colorize    *bool                 `json:"colorize,omitempty"` // pointer for default nil instead of false
+	Style       *sanitview.TViewStyle `json:"style,omitempty"`
 }
 
 func GetConfig() ConfigObj {
@@ -143,6 +145,7 @@ func DefaultConfigFileContents() []byte {
 			TextFound: "(?i)\\brust\\b",
 			Score:     1,
 			TagsWhy:   []string{"tech", "memecred"},
+			Style:     &sanitview.TViewStyle{Fg: "deeppink"},
 		},
 		{
 			TextFound: "(?i)golang",
@@ -220,6 +223,22 @@ func DefaultConfigFileContents() []byte {
 				`"tags_why_not": [%s]`,
 				escapeString(strings.Join(quoted, ", ")),
 			))
+		}
+		if sr.Style != nil {
+			var styleElems []string
+			if sr.Style.Fg != "" {
+				styleElems = append(styleElems, fmt.Sprintf(`"Fg": "%s"`, sr.Style.Fg))
+			}
+			if sr.Style.Bg != "" {
+				styleElems = append(styleElems, fmt.Sprintf(`"Bg": "%s"`, sr.Style.Bg))
+			}
+			if sr.Style.Attrs != "" {
+				styleElems = append(styleElems, fmt.Sprintf(`"Attrs": "%s"`, sr.Style.Attrs))
+			}
+			if sr.Style.Url != "" {
+				styleElems = append(styleElems, fmt.Sprintf(`"Url": "%s"`, sr.Style.Url))
+			}
+			elems = append(elems, fmt.Sprintf(`"style": {%s}`, strings.Join(styleElems, ", ")))
 		}
 		return []byte(fmt.Sprintf(`{%s}`, strings.Join(elems, ", "))), nil
 	}

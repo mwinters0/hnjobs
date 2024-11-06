@@ -292,14 +292,15 @@ func newDisplayJob(job *db.Job) *DisplayJob {
 		case scoring.TextFound:
 			matchIndices := r.Regex.FindAllStringIndex(str, -1)
 			if matchIndices != nil {
-				var style *sanitview.TViewStyle
-				if r.Score >= 0 {
-					style = curTheme.JobBody.PositiveHit
-				} else {
-					style = curTheme.JobBody.NegativeHit
+				if r.Style == nil {
+					if r.Score >= 0 {
+						r.Style = curTheme.JobBody.PositiveHit
+					} else {
+						r.Style = curTheme.JobBody.NegativeHit
+					}
 				}
 				for _, pair := range matchIndices {
-					addStyleRegion(pair[0], pair[1]-1, style)
+					addStyleRegion(pair[0], pair[1]-1, r.Style)
 				}
 			}
 		}
