@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/mwinters0/hnjobs/sanitview"
 	"reflect"
 	"testing"
 )
@@ -47,6 +48,7 @@ func TestDefaultContents(t *testing.T) {
 					TextFound: "(?i)\\brust\\b",
 					Score:     1,
 					TagsWhy:   []string{"tech", "memecred"},
+					Style:     &sanitview.TViewStyle{Fg: "deeppink"},
 				},
 				{
 					TextFound: "(?i)golang",
