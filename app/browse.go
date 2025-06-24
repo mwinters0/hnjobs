@@ -242,7 +242,7 @@ func newDisplayJob(job *db.Job) *DisplayJob {
 			}
 			editSizeDelta := submatchLen - matchLen
 			s = s[:matchStart+offset] + submatchVal + s[matchEnd+offset:]
-			_, err = rlm.ResizeAt(matchStart+offset, editSizeDelta)
+			_, err = rlm.ResizeAt(matchStart+offset+1, editSizeDelta)
 			if err != nil {
 				panic(err)
 			}
