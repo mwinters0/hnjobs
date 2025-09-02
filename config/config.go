@@ -93,10 +93,10 @@ func loadConfigJSON(j []byte) error {
 			return errors.New("scoring rules cannot have both `text_found` and `text_missing`")
 		}
 		if r.TextFound != "" {
-			config.Scoring.Rules[i].TextFound = strings.ToLower(r.TextFound)
+			config.Scoring.Rules[i].TextFound = r.TextFound
 		}
 		if r.TextMissing != "" {
-			config.Scoring.Rules[i].TextMissing = strings.ToLower(r.TextMissing)
+			config.Scoring.Rules[i].TextMissing = r.TextMissing
 		}
 	}
 	// TODO validate that tags are sane (json-compliant, sqlite-compliant, no spaces)
